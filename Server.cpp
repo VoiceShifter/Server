@@ -4,15 +4,18 @@
 # include <netinet/in.h>
 # include <arpa/inet.h>
 # include <cstdio>
+
 # include <iostream>
 # include <string>
+
+signed int SetNonBlock()
+{
+	return 0;
+}
+
 signed int main()
 {
-	signed int Socket = socket(
-			AF_INET, //domain - IPv4 protocol
-			SOCK_STREAM,
-			0);
-
+	signed int Socket = socket(AF_INET, SOCK_STREAM, 0);
 	sockaddr_in SocketAddres;
 	SocketAddres.sin_family = AF_INET;
 	SocketAddres.sin_port = htons(32323);
@@ -25,17 +28,28 @@ signed int main()
 	{
 		signed int SlaveSocket = accept(Socket, 0, 0);
 		std::cout << "Connection established\n";
-		char Buffer[99]{};
-//		scanf("", Buffer);
-		recv(SlaveSocket, Buffer, 99, MSG_NOSIGNAL);
-		printf("%s\n", Buffer);
+		char Buffer;
 		std::string StringBuffer{};
-		std::getline(std::cin, StringBuffer);
-		StringBuffer+="\n";
-		const char* NewPointer{StringBuffer.c_str()};
+		while(recv(SlaveSocket, Buffer, 1, MSG_NOSIGNAL) > 0)
+		{
+			std::cout << Buffer;
+			StringBuffer += Buffer;
+
+		}
+//		recv(SlaveSocket, Buffer, 99, MSG_NOSIGNAL);
+//		printf("%s\n", Buffer);
+		if (Buffer == "close")
+		{
+			shutdown(SlaveSocket, SHUT_RDWR);
+			break;
+		}
+		std::getline(std::cin, StringBuffer);	
+		StringBuffer+="\n";	
+		const char* NewPointer{StringBuffer.c_str() + '\n'};
+		printf("%s\n", NewPointer);
 		send(SlaveSocket, NewPointer, sizeof(NewPointer), MSG_NOSIGNAL);
-		shutdown(SlaveSocket, SHUT_RDWR);
-		//printf("%s\n",Buffer);
+//		shutdown(SlaveSocket, SHUT_RDWR);
+//		printf("%s\n",Buffer);
 	}
 	return 0;
 }
