@@ -36,20 +36,15 @@ signed int main()
 			StringBuffer += Buffer;
 
 		}
-//		recv(SlaveSocket, Buffer, 99, MSG_NOSIGNAL);
-//		printf("%s\n", Buffer);
-		if (Buffer == "close")
-		{
-			shutdown(SlaveSocket, SHUT_RDWR);
-			break;
-		}
-		std::getline(std::cin, StringBuffer);	
+		// if (Buffer == "close")
+		// {
+		// 	shutdown(SlaveSocket, SHUT_RDWR);
+		// 	break;
+		// }
+		// std::getline(std::cin, StringBuffer);	
 		StringBuffer+="\n";	
 		const char* NewPointer{StringBuffer.c_str() + '\n'};
 		printf("%s\n", NewPointer);
-		send(SlaveSocket, NewPointer, sizeof(NewPointer), MSG_NOSIGNAL);
-//		shutdown(SlaveSocket, SHUT_RDWR);
-//		printf("%s\n",Buffer);
 	}
 	return 0;
 }
