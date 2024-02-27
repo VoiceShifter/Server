@@ -28,7 +28,7 @@ signed int main()
 	{
 		signed int SlaveSocket = accept(Socket, 0, 0);
 		std::cout << "Connection established\n";
-		char Buffer;
+		char Buffer[1024];
 		std::string StringBuffer{};
 		while(recv(SlaveSocket, Buffer, 1, MSG_NOSIGNAL) > 0)
 		{
